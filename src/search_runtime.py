@@ -454,7 +454,7 @@ def _search_searxng(
             'format': 'json',
         }
     )
-    req = request.Request(url, headers={'User-Agent': 'claw-code-agent/1.0'})
+    req = request.Request(url, headers={'User-Agent': 'code-agent/1.0'})
     with request.urlopen(req, timeout=timeout_seconds) as response:
         payload = json.loads(response.read().decode('utf-8', errors='replace'))
     results = payload.get('results')
@@ -495,7 +495,7 @@ def _search_brave(
     req = request.Request(
         url,
         headers={
-            'User-Agent': 'claw-code-agent/1.0',
+            'User-Agent': 'code-agent/1.0',
             'X-Subscription-Token': api_key,
             'Accept': 'application/json',
         },
@@ -549,7 +549,7 @@ def _search_tavily(
         provider.base_url,
         data=data,
         headers={
-            'User-Agent': 'claw-code-agent/1.0',
+            'User-Agent': 'code-agent/1.0',
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },

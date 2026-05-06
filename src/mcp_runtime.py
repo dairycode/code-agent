@@ -769,7 +769,7 @@ class _StdioMCPConnection:
                     'protocolVersion': MCP_PROTOCOL_VERSION,
                     'capabilities': {},
                     'clientInfo': {
-                        'name': 'claw-code-agent',
+                        'name': 'code-agent',
                         'version': '0.1.0',
                     },
                 },

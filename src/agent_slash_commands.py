@@ -375,7 +375,7 @@ def get_slash_command_specs() -> tuple[SlashCommandSpec, ...]:
         ),
         SlashCommandSpec(
             names=('doctor',),
-            description='Diagnose and verify the claw-code installation and settings.',
+            description='Diagnose and verify the code-agent installation and settings.',
             handler=_handle_doctor,
         ),
         SlashCommandSpec(
@@ -430,7 +430,7 @@ def get_slash_command_specs() -> tuple[SlashCommandSpec, ...]:
         ),
         SlashCommandSpec(
             names=('feedback', 'bug'),
-            description='Open the Claude Code feedback page in a browser.',
+            description='Open the Code Agent feedback page in a browser.',
             handler=_handle_feedback,
         ),
         SlashCommandSpec(
@@ -440,7 +440,7 @@ def get_slash_command_specs() -> tuple[SlashCommandSpec, ...]:
         ),
         SlashCommandSpec(
             names=('stickers',),
-            description='Open the Claude Code sticker order page in a browser.',
+            description='Open the Code Agent sticker order page in a browser.',
             handler=_handle_stickers,
         ),
         SlashCommandSpec(
@@ -475,7 +475,7 @@ def get_slash_command_specs() -> tuple[SlashCommandSpec, ...]:
         ),
         SlashCommandSpec(
             names=('passes',),
-            description='Show Claude Code guest passes information.',
+            description='Show Code Agent guest passes information.',
             handler=_handle_passes,
         ),
         SlashCommandSpec(
@@ -550,7 +550,7 @@ def get_slash_command_specs() -> tuple[SlashCommandSpec, ...]:
         ),
         SlashCommandSpec(
             names=('remote-setup', 'web-setup'),
-            description='Report Claude Code on the web setup readiness (gh + sign-in checks).',
+            description='Report Code Agent on the web setup readiness (gh + sign-in checks).',
             handler=_handle_remote_setup,
         ),
     )
@@ -1305,7 +1305,7 @@ def _handle_copy(agent: 'LocalCodingAgent', args: str, input_text: str) -> Slash
 
     # Write to temp file
     from pathlib import Path as _Path
-    tmp_dir = _Path(_tempfile.gettempdir()) / 'claw-code'
+    tmp_dir = _Path(_tempfile.gettempdir()) / 'code-agent'
     tmp_dir.mkdir(parents=True, exist_ok=True)
     out_path = tmp_dir / 'response.md'
     out_path.write_text(content, encoding='utf-8')
@@ -1485,7 +1485,7 @@ def _handle_effort(agent: 'LocalCodingAgent', args: str, input_text: str) -> Sla
 
 
 def _handle_doctor(agent: 'LocalCodingAgent', _args: str, input_text: str) -> SlashCommandResult:
-    """Diagnose and verify the claw-code installation."""
+    """Diagnose and verify the code-agent installation."""
     import os
     import shutil
     import sys
@@ -1905,7 +1905,7 @@ def _handle_feedback(
     note = args.strip()
     body = _open_or_link(
         _FEEDBACK_URL,
-        opening_message='Opening the Claude Code feedback tracker in your browser…',
+        opening_message='Opening the Code Agent feedback tracker in your browser…',
         fallback_message='Submit feedback at:',
     )
     if note:
@@ -1937,8 +1937,8 @@ def _handle_stickers(
         input_text,
         _open_or_link(
             _STICKERS_URL,
-            opening_message='Opening the Claude Code sticker page in your browser…',
-            fallback_message='Order Claude Code stickers at:',
+            opening_message='Opening the Code Agent sticker page in your browser…',
+            fallback_message='Order Code Agent stickers at:',
         ),
     )
 
@@ -2041,7 +2041,7 @@ def _handle_passes(
 ) -> SlashCommandResult:
     return _local_result(
         input_text,
-        'Claude Code guest passes are managed in your Claude.ai account.\n'
+        'Code Agent guest passes are managed in your Claude.ai account.\n'
         '  Visit https://claude.ai to sign in and view remaining passes.',
     )
 
@@ -2290,7 +2290,7 @@ def _read_package_version() -> str:
     try:
         from importlib.metadata import PackageNotFoundError, version
 
-        return version('claw-code-agent')
+        return version('code-agent')
     except Exception:
         return 'unknown'
 
@@ -2308,13 +2308,13 @@ def _handle_version(
     impl = sys.implementation.name
     return _local_result(
         input_text,
-        f'claw-code-agent {pkg_version} (Python {py_version}, {impl}).',
+        f'code-agent {pkg_version} (Python {py_version}, {impl}).',
     )
 
 
 _INIT_PROMPT = (
     'Please analyze this codebase and create a CLAUDE.md file, which will be '
-    'given to future instances of Claude Code to operate in this repository.\n'
+    'given to future instances of Code Agent to operate in this repository.\n'
     '\n'
     'What to add:\n'
     '1. Commands that will be commonly used, such as how to build, lint, and '
@@ -2345,7 +2345,7 @@ _INIT_PROMPT = (
     '```\n'
     '# CLAUDE.md\n'
     '\n'
-    'This file provides guidance to Claude Code (claude.ai/code) when '
+    'This file provides guidance to Code Agent (claude.ai/code) when '
     'working with code in this repository.\n'
     '```'
 )
@@ -2603,7 +2603,7 @@ def _handle_remote_setup(
     code_web_url = 'https://claude.ai/code'
     gh_status, gh_detail = _gh_auth_status()
     lines = [
-        'Claude Code on the web setup:',
+        'Code Agent on the web setup:',
         f'  Visit {code_web_url} to manage your environments.',
         '',
         f'GitHub CLI: {gh_status}',

@@ -127,7 +127,7 @@ def build_system_prompt_parts(
 def get_intro_section() -> str:
     """生成系统提示词的介绍段落。"""
     return (
-        'You are Claw Code Python, a Python reimplementation of a Claude Code-style '
+        'You are Code Agent, a Python reimplementation of a Claude Code-style '
         'coding agent. You are an interactive software-engineering assistant. Use '
         'the instructions below and the tools available to help the user complete '
         'software engineering tasks.'
