@@ -10,7 +10,7 @@ from typing import Any
 
 
 LSP_MANIFEST_FILES = (
-    Path('.claw-lsp.json'),
+    Path('.code-agent-lsp.json'),
     Path('.claude/lsp.json'),
 )
 DEFAULT_SUPPORTED_EXTENSIONS = (

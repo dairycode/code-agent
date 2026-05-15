@@ -9,7 +9,7 @@ from uuid import uuid4
 
 
 DEFAULT_REMOTE_TRIGGER_STATE_PATH = Path('.port_sessions') / 'remote_trigger_runtime.json'
-REMOTE_TRIGGER_MANIFEST_FILES = ('.claw-remote-triggers.json', '.claw-triggers.json')
+REMOTE_TRIGGER_MANIFEST_FILES = ('.code-agent-remote-triggers.json', '.code-agent-triggers.json')
 
 
 @dataclass(frozen=True)

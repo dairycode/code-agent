@@ -11,8 +11,7 @@ DEFAULT_CONFIG_DIR = Path('.claude')
 PROJECT_SETTINGS_PATH = DEFAULT_CONFIG_DIR / 'settings.json'
 LOCAL_SETTINGS_PATH = DEFAULT_CONFIG_DIR / 'settings.local.json'
 LEGACY_CONFIG_PATHS = (
-    Path('.claw-config.json'),
-    Path('.codex-config.json'),
+    Path('.code-agent-config.json'),
 )
 
 
@@ -203,8 +202,7 @@ class ConfigRuntime:
 
 def _discover_source_paths(cwd: Path) -> tuple[tuple[str, Path], ...]:
     candidates = [
-        ('legacy-claw', (cwd / LEGACY_CONFIG_PATHS[0]).resolve()),
-        ('legacy-codex', (cwd / LEGACY_CONFIG_PATHS[1]).resolve()),
+        ('legacy', (cwd / LEGACY_CONFIG_PATHS[0]).resolve()),
         ('project', (cwd / PROJECT_SETTINGS_PATH).resolve()),
         ('local', (cwd / LOCAL_SETTINGS_PATH).resolve()),
     ]

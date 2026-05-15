@@ -136,7 +136,7 @@ class AskUserRuntime:
         history_payload = payload.get('history')
         history = tuple(item for item in history_payload if isinstance(item, dict)) if isinstance(history_payload, list) else ()
         if interactive is None:
-            env_value = os.environ.get('CLAW_ASK_USER_INTERACTIVE', '')
+            env_value = os.environ.get('CODE_AGENT_ASK_USER_INTERACTIVE', '')
             interactive = env_value.strip().lower() in {'1', 'true', 'yes', 'on'}
         return cls(
             cwd=cwd.resolve(),
@@ -210,7 +210,7 @@ class AskUserRuntime:
 
         raise LookupError(
             'No queued ask-user answer is available. '
-            'Add .claw-ask-user.json or enable CLAW_ASK_USER_INTERACTIVE=1 for interactive prompting.'
+            'Add .code-agent-ask-user.json or enable CODE_AGENT_ASK_USER_INTERACTIVE=1 for interactive prompting.'
         )
 
     def render_summary(self) -> str:
@@ -280,14 +280,14 @@ class AskUserRuntime:
 def _discover_manifest_paths(cwd: Path, additional_working_directories: tuple[str, ...]) -> tuple[Path, ...]:
     """查找问答清单文件路径。"""
     candidates = [
-        cwd.resolve() / '.claw-ask-user.json',
+        cwd.resolve() / '.code-agent-ask-user.json',
         cwd.resolve() / '.claude' / 'ask-user.json',
     ]
     for raw_path in additional_working_directories:
         root = Path(raw_path).resolve()
         candidates.extend(
             [
-                root / '.claw-ask-user.json',
+                root / '.code-agent-ask-user.json',
                 root / '.claude' / 'ask-user.json',
             ]
         )

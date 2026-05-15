@@ -11,7 +11,7 @@ from urllib import parse, request
 DEFAULT_SEARCH_STATE_DIR = Path('.port_sessions')
 DEFAULT_SEARCH_STATE_FILE = DEFAULT_SEARCH_STATE_DIR / 'search_runtime.json'
 SEARCH_MANIFEST_PATHS = (
-    Path('.claw-search.json'),
+    Path('.code-agent-search.json'),
     Path('.claude/search.json'),
 )
 DEFAULT_SEARXNG_BASE_URL = 'http://127.0.0.1:8080'
@@ -140,7 +140,7 @@ class SearchRuntime:
             active = self.get_provider(self.active_provider_name)
             if active is not None:
                 return active
-        env_default = os.environ.get('CLAW_SEARCH_PROVIDER')
+        env_default = os.environ.get('CODE_AGENT_SEARCH_PROVIDER')
         if isinstance(env_default, str) and env_default.strip():
             active = self.get_provider(env_default.strip())
             if active is not None:

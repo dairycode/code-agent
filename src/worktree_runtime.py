@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_WORKTREE_STATE_FILE = 'claw_worktree_runtime.json'
-DEFAULT_WORKTREE_PARENT_SUFFIX = '-claw-worktrees'
+DEFAULT_WORKTREE_STATE_FILE = 'code_agent_worktree_runtime.json'
+DEFAULT_WORKTREE_PARENT_SUFFIX = '-code-agent-worktrees'
 VALID_EXIT_ACTIONS = ('keep', 'remove')
 _WORKTREE_SLUG_RE = re.compile(r'^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$')
 
@@ -176,7 +176,7 @@ class WorktreeRuntime:
         slug = _normalize_slug(name)
         worktree_parent = self.repo_root.parent / f'{self.repo_root.name}{DEFAULT_WORKTREE_PARENT_SUFFIX}'
         worktree_path = (worktree_parent / slug).resolve()
-        branch = f'claw/{slug}'
+        branch = f'code-agent/{slug}'
         if worktree_path.exists():
             raise RuntimeError(f'Worktree path already exists: {worktree_path}')
         if _branch_exists(self.repo_root, branch):

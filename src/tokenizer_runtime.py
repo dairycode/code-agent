@@ -32,9 +32,9 @@ def describe_token_counter(model: str | None = None) -> TokenCounterInfo:
 def resolve_token_counter(model: str | None = None) -> ResolvedTokenCounter:
     return _resolve_token_counter(
         _normalize_model(model),
-        _normalize_env('CLAW_CODE_TOKENIZER_PATH'),
-        _normalize_env('CLAW_CODE_TOKENIZER_MODEL'),
-        _normalize_env('CLAW_CODE_TOKENIZER_TRUST_REMOTE_CODE'),
+        _normalize_env('CODE_AGENT_TOKENIZER_PATH'),
+        _normalize_env('CODE_AGENT_TOKENIZER_MODEL'),
+        _normalize_env('CODE_AGENT_TOKENIZER_TRUST_REMOTE_CODE'),
     )
 
 

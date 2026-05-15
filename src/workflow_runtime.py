@@ -9,7 +9,7 @@ from uuid import uuid4
 
 
 DEFAULT_WORKFLOW_STATE_PATH = Path('.port_sessions') / 'workflow_runtime.json'
-WORKFLOW_MANIFEST_FILES = ('.claw-workflows.json', '.claw-workflow.json')
+WORKFLOW_MANIFEST_FILES = ('.code-agent-workflows.json', '.code-agent-workflow.json')
 
 
 @dataclass(frozen=True)

@@ -332,16 +332,16 @@ class TeamRuntime:
 
 def _discover_manifest_paths(cwd: Path, additional_working_directories: tuple[str, ...]) -> tuple[Path, ...]:
     candidates = [
-        cwd.resolve() / '.claw-teams.json',
-        cwd.resolve() / '.claw-team.json',
+        cwd.resolve() / '.code-agent-teams.json',
+        cwd.resolve() / '.code-agent-team.json',
         cwd.resolve() / '.claude' / 'teams.json',
     ]
     for raw_path in additional_working_directories:
         root = Path(raw_path).resolve()
         candidates.extend(
             [
-                root / '.claw-teams.json',
-                root / '.claw-team.json',
+                root / '.code-agent-teams.json',
+                root / '.code-agent-team.json',
                 root / '.claude' / 'teams.json',
             ]
         )

@@ -393,8 +393,7 @@ def _discover_plugin_manifest_paths(
     roots = _walk_upwards(cwd.resolve())
     roots.extend(Path(path).resolve() for path in additional_working_directories)
     for root in roots:
-        remember(root / '.codex-plugin' / 'plugin.json')
-        remember(root / '.claw-plugin' / 'plugin.json')
+        remember(root / '.code-agent-plugin' / 'plugin.json')
         plugins_dir = root / 'plugins'
         if plugins_dir.is_dir():
             for candidate in sorted(plugins_dir.glob('*/plugin.json')):

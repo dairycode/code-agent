@@ -11,7 +11,7 @@ from typing import Any
 DEFAULT_ACCOUNT_STATE_DIR = Path('.port_sessions')
 DEFAULT_ACCOUNT_STATE_FILE = DEFAULT_ACCOUNT_STATE_DIR / 'account_runtime.json'
 ACCOUNT_MANIFEST_PATHS = (
-    Path('.claw-account.json'),
+    Path('.code-agent-account.json'),
     Path('.claude/account.json'),
     Path('.claude/auth.json'),
 )

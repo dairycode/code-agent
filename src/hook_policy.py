@@ -181,9 +181,8 @@ def _discover_policy_paths(
     roots.extend(Path(path).resolve() for path in additional_working_directories)
 
     for root in roots:
-        remember(root / '.claw-policy.json')
-        remember(root / '.codex-policy.json')
-        remember(root / '.claw-hooks.json')
+        remember(root / '.code-agent-policy.json')
+        remember(root / '.code-agent-hooks.json')
     return tuple(candidates)
 
 

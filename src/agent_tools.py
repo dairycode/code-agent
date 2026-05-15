@@ -3114,7 +3114,7 @@ def _require_ask_user_runtime(context: ToolExecutionContext):
 def _require_search_runtime(context: ToolExecutionContext):
     if context.search_runtime is None or not context.search_runtime.has_search_runtime():
         raise ToolExecutionError(
-            'No local search provider is available. Add a .claw-search.json or .claude/search.json manifest, '
+            'No local search provider is available. Add a .code-agent-search.json or .claude/search.json manifest, '
             'or set SEARXNG_BASE_URL, BRAVE_SEARCH_API_KEY, or TAVILY_API_KEY.'
         )
     return context.search_runtime
@@ -3129,7 +3129,7 @@ def _require_config_runtime(context: ToolExecutionContext):
 def _require_lsp_runtime(context: ToolExecutionContext):
     if context.lsp_runtime is None or not context.lsp_runtime.has_lsp_support():
         raise ToolExecutionError(
-            'No local LSP runtime is available. Add supported source files to the workspace or a .claw-lsp.json manifest.'
+            'No local LSP runtime is available. Add supported source files to the workspace or a .code-agent-lsp.json manifest.'
         )
     return context.lsp_runtime
 
@@ -3143,7 +3143,7 @@ def _require_mcp_runtime(context: ToolExecutionContext):
         )
     ):
         raise ToolExecutionError(
-            'No MCP runtime is available. Add a .claw-mcp.json, .mcp.json, or mcpServers manifest first.'
+            'No MCP runtime is available. Add a .code-agent-mcp.json, .mcp.json, or mcpServers manifest first.'
         )
     return context.mcp_runtime
 

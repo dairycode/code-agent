@@ -367,9 +367,8 @@ def _discover_manifest_paths(
     roots.extend(Path(path).resolve() for path in additional_working_directories)
 
     for root in roots:
-        remember(root / '.claw-remote.json')
+        remember(root / '.code-agent-remote.json')
         remember(root / '.remote.json')
-        remember(root / '.codex-remote.json')
         remember(root / 'remote.json')
     return tuple(candidates)
 

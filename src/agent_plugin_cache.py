@@ -79,7 +79,7 @@ def _discover_candidate_paths(
         '.port_sessions/plugin_cache.json',
         '.port_sessions/plugins.json',
         '.claude/plugins/cache.json',
-        '.claw/plugins/cache.json',
+        '.code-agent/plugins/cache.json',
         'plugins/cache.json',
         '.plugins/cache.json',
     )
