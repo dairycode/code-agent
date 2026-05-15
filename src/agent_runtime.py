@@ -1167,7 +1167,7 @@ class LocalCodingAgent:
         session: AgentSessionState,
         tool_specs: list[dict[str, object]],
     ) -> tuple[AssistantTurn, tuple[StreamEvent, ...]]:
-        """调用 OpenAI 兼容 API，发送 session 消息和工具定义，返回模型响应和流式事件。"""
+        """调用 Claude Messages API，将内部 OpenAI 格式消息转换后发送，返回模型响应和流式事件。"""
         if not self.runtime_config.stream_model_responses:
             turn = self.client.complete(
                 session.to_openai_messages(),
