@@ -45,7 +45,7 @@ from .agent_types import (
     ToolExecutionResult,
     UsageStats,
 )
-from .openai_compat import OpenAICompatClient, OpenAICompatError
+from .claude_client import ClaudeClient, ClaudeAPIError
 from .plan_runtime import PlanRuntime
 from .plugin_runtime import PluginRuntime
 from .remote_runtime import RemoteRuntime
@@ -202,7 +202,7 @@ class LocalCodingAgent:
         if virtual_tools:
             registry = {**registry, **virtual_tools}
         self.tool_registry = registry
-        self.client = OpenAICompatClient(self.model_config)
+        self.client = ClaudeClient(self.model_config)
         self.tool_context = build_tool_context(
             self.runtime_config,
             tool_registry=self.tool_registry,
@@ -609,7 +609,7 @@ class LocalCodingAgent:
             # ── 调用模型：发送 session 消息 + 工具定义到 LLM API ──
             try:
                 turn, turn_events = self._query_model(session, tool_specs)
-            except OpenAICompatError as exc:
+            except ClaudeAPIError as exc:
                 # 如果是 prompt 过长错误，尝试紧急压缩后重试一次
                 if self._is_prompt_too_long_error(exc) and self._reactive_compact_session(
                     session,
@@ -618,7 +618,7 @@ class LocalCodingAgent:
                 ):
                     try:
                         turn, turn_events = self._query_model(session, tool_specs)
-                    except OpenAICompatError as retry_exc:
+                    except ClaudeAPIError as retry_exc:
                         exc = retry_exc
                     else:
                         stream_events.extend(
@@ -1256,7 +1256,7 @@ class LocalCodingAgent:
             if isinstance(raw_arguments, str) and raw_arguments.strip():
                 arguments = json.loads(raw_arguments)
                 if not isinstance(arguments, dict):
-                    raise OpenAICompatError(
+                    raise ClaudeAPIError(
                         f'Tool arguments must decode to an object, got {type(arguments).__name__}'
                     )
             else:

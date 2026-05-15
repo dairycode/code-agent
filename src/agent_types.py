@@ -98,10 +98,11 @@ class OutputSchemaConfig:
 @dataclass(frozen=True)
 class ModelConfig:
     model: str
-    base_url: str = 'http://127.0.0.1:8000/v1'
-    api_key: str = 'local-token'
+    base_url: str = 'https://api.anthropic.com'
+    api_key: str = ''
     temperature: float = 0.0
     timeout_seconds: float = 120.0
+    max_tokens: int = 8192
     pricing: ModelPricing = field(default_factory=ModelPricing)
 
 

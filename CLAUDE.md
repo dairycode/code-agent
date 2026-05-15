@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-这是一个 Python 实现的本地 AI 代理运行时系统，支持与本地部署的大语言模型（如 vLLM、Ollama）进行交互式对话。核心功能包括代理编排、工具执行、会话管理、插件系统和上下文压缩。
+这是一个 Python 实现的 AI 代理运行时系统，通过 Claude Messages API 与 Anthropic 模型进行交互式对话。核心功能包括代理编排、工具执行、会话管理、插件系统和上下文压缩。
 
 **代码规模**: ~22,700 行 Python 代码  
 **核心模块**: 38+ 个运行时组件
@@ -19,9 +19,9 @@ python -m src.main
 
 # 指定模型和 API 端点
 python -m src.main \
-  --model "Qwen/Qwen3-Coder-30B-A3B-Instruct" \
-  --base-url "http://127.0.0.1:8000/v1" \
-  --api-key "local-token"
+  --model "claude-sonnet-4-20250514" \
+  --base-url "https://api.anthropic.com" \
+  --api-key "sk-ant-..."
 
 # 启用文件写入和 Shell 命令权限
 python -m src.main --allow-write --allow-shell
@@ -36,9 +36,9 @@ python -m src.main --show-transcript
 ### 环境变量配置
 
 可通过环境变量设置默认值：
-- `OPENAI_MODEL`: 默认模型名称
-- `OPENAI_BASE_URL`: API 端点地址
-- `OPENAI_API_KEY`: API 密钥
+- `ANTHROPIC_MODEL`: 默认模型名称
+- `ANTHROPIC_BASE_URL`: API 端点地址
+- `ANTHROPIC_API_KEY`: API 密钥
 
 ## 核心架构
 
@@ -140,14 +140,12 @@ python -m src.main --show-transcript
 
 ### 模型兼容性
 
-系统通过 OpenAI 兼容层 ([openai_compat.py](src/openai_compat.py)) 支持多种模型后端：
-- vLLM 本地推理
-- Ollama 本地部署
-- LiteLLM 代理路由
-- OpenRouter 云端网关
-- 任何兼容 OpenAI API 的服务
+系统通过 Claude Messages API 客户端 ([claude_client.py](src/claude_client.py)) 调用 Anthropic 模型：
+- 默认端点：`https://api.anthropic.com`
+- 支持自定义 base_url（可接入代理网关）
+- 使用原始 HTTP 请求（urllib），无需额外 SDK 依赖
 
-确保模型支持工具调用（function calling）功能。
+确保 API 密钥有效且模型支持工具调用（tool use）功能。
 
 ### 对话循环逻辑
 

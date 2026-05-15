@@ -1,15 +1,15 @@
 # Code Agent
 
-> 基于本地大语言模型的 AI 代码助手 — 支持 vLLM、Ollama 等本地推理引擎
+> 基于 Claude API 的 AI 代码助手 — 支持工具调用、会话管理、插件扩展
 
 ---
 
-## 📋 项目简介
+## 项目简介
 
-Code Agent 是一个 Python 实现的本地 AI 代理运行时系统，让你能够与本地部署的大语言模型进行交互式对话，完成代码编写、重构、调试等任务。
+Code Agent 是一个 Python 实现的 AI 代理运行时系统，通过 Claude Messages API 与 Anthropic 模型进行交互式对话，完成代码编写、重构、调试等任务。
 
 **核心特性**：
-- 🚀 支持多种本地模型后端（vLLM、Ollama、LiteLLM）
+- 🚀 直接调用 Claude API（支持自定义 base_url）
 - 🔧 完整的工具执行系统（文件操作、Shell 命令）
 - 💾 会话持久化与恢复
 - 🔌 可扩展的插件系统
@@ -27,7 +27,7 @@ Code Agent 是一个 Python 实现的本地 AI 代理运行时系统，让你能
 ### 前置要求
 
 - Python 3.10+
-- 本地部署的 OpenAI 兼容 API 服务（如 vLLM、Ollama）
+- Anthropic API 密钥（从 https://console.anthropic.com 获取）
 
 ### 安装
 
@@ -43,11 +43,12 @@ pip install -r requirements.txt
 ### 配置环境变量
 
 ```bash
-# 复制环境变量示例文件
-cp .env.example .env
+# 设置 API 密钥
+export ANTHROPIC_API_KEY="sk-ant-..."
 
-# 编辑 .env 文件，配置你的模型参数
-vim .env
+# 可选：自定义端点和模型
+export ANTHROPIC_BASE_URL="https://api.anthropic.com"
+export ANTHROPIC_MODEL="claude-sonnet-4-20250514"
 ```
 
 ### 启动交互式对话
@@ -73,9 +74,9 @@ python -m src.main
 
 # 指定模型和 API 端点
 python -m src.main \
-  --model "Qwen/Qwen3-Coder-30B-A3B-Instruct" \
-  --base-url "http://127.0.0.1:8000/v1" \
-  --api-key "local-token"
+  --model "claude-sonnet-4-20250514" \
+  --base-url "https://api.anthropic.com" \
+  --api-key "sk-ant-..."
 
 # 启用文件写入和 Shell 命令权限
 python -m src.main --allow-write --allow-shell
@@ -87,9 +88,9 @@ python -m src.main --resume-session-id <session_id>
 #### 方式三：使用环境变量
 
 ```bash
-export OPENAI_MODEL="Qwen/Qwen3-Coder-30B-A3B-Instruct"
-export OPENAI_BASE_URL="http://127.0.0.1:8000/v1"
-export OPENAI_API_KEY="local-token"
+export ANTHROPIC_MODEL="claude-sonnet-4-20250514"
+export ANTHROPIC_BASE_URL="https://api.anthropic.com"
+export ANTHROPIC_API_KEY="sk-ant-..."
 
 python -m src.main
 ```
@@ -195,7 +196,8 @@ python -m src.main
 | `ask_user_runtime.py` | 用户询问 — 排队或交互式询问流程、历史记录 |
 | `search_runtime.py` | 搜索运行时 — 基于提供商的 `web_search`、本地清单 |
 | `worktree_runtime.py` | 工作树运行时 — Git worktree 隔离、分支管理 |
-| `openai_compat.py` | OpenAI 兼容层 — 统一的 API 客户端 |
+| `openai_compat.py` | OpenAI 兼容层 — 备用 API 客户端（本地模型） |
+| `claude_client.py` | Claude API 客户端 — Messages API 调用 |
 | `session_store.py` | 会话存储 — 会话持久化与恢复 |
 | `session_env_vars.py` | 环境变量 — 会话级环境变量管理 |
 | `tokenizer_runtime.py` | 分词器 — Token 计数与估算 |
@@ -213,7 +215,7 @@ agent_runtime.py
 ├── plugin_runtime.py
 ├── mcp_runtime.py
 ├── compact.py
-└── openai_compat.py
+└── claude_client.py
 ```
 
 ---
@@ -271,14 +273,15 @@ from src.agent_types import AgentRuntimeConfig, ModelConfig, ModelPricing
 
 # 创建模型配置
 model_config = ModelConfig(
-    model='Qwen/Qwen3-Coder-30B-A3B-Instruct',
-    base_url='http://127.0.0.1:8000/v1',
-    api_key='local-token',
+    model='claude-sonnet-4-20250514',
+    base_url='https://api.anthropic.com',
+    api_key='sk-ant-...',
     temperature=0.0,
     timeout_seconds=120.0,
+    max_tokens=8192,
     pricing=ModelPricing(
-        input_cost_per_million_tokens_usd=0.0,
-        output_cost_per_million_tokens_usd=0.0,
+        input_cost_per_million_tokens_usd=3.0,
+        output_cost_per_million_tokens_usd=15.0,
     ),
 )
 
@@ -312,10 +315,11 @@ print(f'费用: ${result.total_cost_usd:.6f}')
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
-| `--model` | 模型名称 | `Qwen/Qwen3-Coder-30B-A3B-Instruct` |
-| `--base-url` | API 端点地址 | `http://127.0.0.1:8000/v1` |
-| `--api-key` | API 密钥 | `local-token` |
+| `--model` | 模型名称 | `claude-sonnet-4-20250514` |
+| `--base-url` | API 端点地址 | `https://api.anthropic.com` |
+| `--api-key` | API 密钥 | - |
 | `--temperature` | 采样温度 | `0.0` |
+| `--max-tokens` | 最大输出 token 数 | `8192` |
 | `--timeout-seconds` | 请求超时时间 | `120.0` |
 | `--cwd` | 工作目录 | `.` |
 | `--allow-write` | 启用文件写入 | `False` |
@@ -435,19 +439,19 @@ model: Qwen/Qwen3-Coder-30B-A3B-Instruct
 
 ---
 
-## 🌐 模型兼容性
+## 模型兼容性
 
-支持任何兼容 OpenAI API 的服务：
+通过 Claude Messages API 调用 Anthropic 模型：
 
-| 后端 | 说明 |
+| 模型 | 说明 |
 |------|------|
-| **vLLM** | 高性能本地推理引擎 |
-| **Ollama** | 开箱即用的本地部署方案 |
-| **LiteLLM** | 多模型代理路由 |
-| **OpenRouter** | 云端模型网关 |
-| **自定义** | 任何 OpenAI 兼容 API |
+| **claude-sonnet-4-20250514** | 默认模型，平衡性能与成本 |
+| **claude-opus-4-20250514** | 最强推理能力 |
+| **claude-haiku-3-5-20241022** | 最快响应速度 |
 
-**要求**：模型必须支持工具调用（function calling）功能。
+支持自定义 `base_url`，可接入兼容 Claude API 格式的代理网关。
+
+**要求**：模型必须支持工具调用（tool use）功能。
 
 ---
 

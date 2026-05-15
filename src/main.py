@@ -80,10 +80,11 @@ def _build_model_config(args: argparse.Namespace) -> ModelConfig:
     """从命令行参数构建模型连接配置：模型名、API 地址、密钥、温度、超时、定价。"""
     return ModelConfig(
         model=args.model,
-        base_url=getattr(args, 'base_url', os.environ.get('OPENAI_BASE_URL', 'http://127.0.0.1:8000/v1')),
-        api_key=getattr(args, 'api_key', os.environ.get('OPENAI_API_KEY', 'local-token')),
+        base_url=getattr(args, 'base_url', os.environ.get('ANTHROPIC_BASE_URL', 'https://api.anthropic.com')),
+        api_key=getattr(args, 'api_key', os.environ.get('ANTHROPIC_API_KEY', '')),
         temperature=getattr(args, 'temperature', 0.0),
         timeout_seconds=getattr(args, 'timeout_seconds', 120.0),
+        max_tokens=int(getattr(args, 'max_tokens', 8192) or 8192),
         pricing=ModelPricing(
             input_cost_per_million_tokens_usd=float(
                 getattr(args, 'input_cost_per_million', 0.0) or 0.0
@@ -194,10 +195,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--resume-session-id')
     parser.add_argument('--max-turns', type=int, default=12)
     parser.add_argument('--show-transcript', action='store_true')
-    parser.add_argument('--model', default=os.environ.get('OPENAI_MODEL', 'Qwen/Qwen3-Coder-30B-A3B-Instruct'))
-    parser.add_argument('--base-url', default=os.environ.get('OPENAI_BASE_URL', 'http://127.0.0.1:8000/v1'))
-    parser.add_argument('--api-key', default=os.environ.get('OPENAI_API_KEY', 'local-token'))
+    parser.add_argument('--model', default=os.environ.get('ANTHROPIC_MODEL', 'claude-sonnet-4-20250514'))
+    parser.add_argument('--base-url', default=os.environ.get('ANTHROPIC_BASE_URL', 'https://api.anthropic.com'))
+    parser.add_argument('--api-key', default=os.environ.get('ANTHROPIC_API_KEY', ''))
     parser.add_argument('--temperature', type=float, default=0.0)
+    parser.add_argument('--max-tokens', type=int, default=8192)
     parser.add_argument('--timeout-seconds', type=float, default=120.0)
     parser.add_argument('--input-cost-per-million', type=float, default=0.0)
     parser.add_argument('--output-cost-per-million', type=float, default=0.0)
