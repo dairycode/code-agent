@@ -9,23 +9,32 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# 加载环境变量
-if [ -f .env ]; then
-    echo "加载 .env 配置..."
-    export $(grep -v '^#' .env | xargs)
-fi
+# ═══════════════════════════════════════
+# 配置区（直接修改以下值即可）
+# ═══════════════════════════════════════
 
-# 默认配置
-MODEL="${ANTHROPIC_MODEL:-claude-sonnet-4-20250514}"
-BASE_URL="${ANTHROPIC_BASE_URL:-https://api.anthropic.com}"
-API_KEY="${ANTHROPIC_API_KEY:-}"
-TEMPERATURE="${TEMPERATURE:-0.0}"
-MAX_TOKENS="${MAX_TOKENS:-8192}"
-TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-120.0}"
-MAX_TURNS="${MAX_TURNS:-12}"
-CWD="${CWD:-.}"
+MODEL="claude-4.7-opus"
+BASE_URL="http://llmapi.bilibili.co"
+API_KEY="bsk-8eaff4b3a78334ea2a2380857166c036"
+TEMPERATURE="0.0"
+MAX_TOKENS="8192"
+TIMEOUT_SECONDS="120.0"
+MAX_TURNS="12"
+CWD="."
 
-# 构建命令参数
+# 权限
+ALLOW_WRITE="true"
+ALLOW_SHELL="true"
+UNSAFE="false"
+
+# 输出模式
+STREAM="true"
+SHOW_TRANSCRIPT="false"
+
+# ═══════════════════════════════════════
+# 以下无需修改
+# ═══════════════════════════════════════
+
 ARGS=(
     --model "$MODEL"
     --base-url "$BASE_URL"
@@ -37,79 +46,24 @@ ARGS=(
     --cwd "$CWD"
 )
 
-# 权限配置
-if [ "${ALLOW_WRITE:-false}" = "true" ]; then
+if [ "$ALLOW_WRITE" = "true" ]; then
     ARGS+=(--allow-write)
 fi
 
-if [ "${ALLOW_SHELL:-false}" = "true" ]; then
+if [ "$ALLOW_SHELL" = "true" ]; then
     ARGS+=(--allow-shell)
 fi
 
-if [ "${UNSAFE:-false}" = "true" ]; then
+if [ "$UNSAFE" = "true" ]; then
     ARGS+=(--unsafe)
 fi
 
-# 流式输出
-if [ "${STREAM:-false}" = "true" ]; then
+if [ "$STREAM" = "true" ]; then
     ARGS+=(--stream)
 fi
 
-# 显示完整对话记录
-if [ "${SHOW_TRANSCRIPT:-false}" = "true" ]; then
+if [ "$SHOW_TRANSCRIPT" = "true" ]; then
     ARGS+=(--show-transcript)
-fi
-
-# Token 定价
-if [ -n "$INPUT_COST_PER_MILLION" ]; then
-    ARGS+=(--input-cost-per-million "$INPUT_COST_PER_MILLION")
-fi
-
-if [ -n "$OUTPUT_COST_PER_MILLION" ]; then
-    ARGS+=(--output-cost-per-million "$OUTPUT_COST_PER_MILLION")
-fi
-
-# Token 预算限制
-if [ -n "$MAX_TOTAL_TOKENS" ]; then
-    ARGS+=(--max-total-tokens "$MAX_TOTAL_TOKENS")
-fi
-
-if [ -n "$MAX_INPUT_TOKENS" ]; then
-    ARGS+=(--max-input-tokens "$MAX_INPUT_TOKENS")
-fi
-
-if [ -n "$MAX_OUTPUT_TOKENS" ]; then
-    ARGS+=(--max-output-tokens "$MAX_OUTPUT_TOKENS")
-fi
-
-if [ -n "$MAX_BUDGET_USD" ]; then
-    ARGS+=(--max-budget-usd "$MAX_BUDGET_USD")
-fi
-
-if [ -n "$MAX_TOOL_CALLS" ]; then
-    ARGS+=(--max-tool-calls "$MAX_TOOL_CALLS")
-fi
-
-if [ -n "$MAX_MODEL_CALLS" ]; then
-    ARGS+=(--max-model-calls "$MAX_MODEL_CALLS")
-fi
-
-# 上下文压缩
-if [ -n "$AUTO_SNIP_THRESHOLD" ]; then
-    ARGS+=(--auto-snip-threshold "$AUTO_SNIP_THRESHOLD")
-fi
-
-if [ -n "$AUTO_COMPACT_THRESHOLD" ]; then
-    ARGS+=(--auto-compact-threshold "$AUTO_COMPACT_THRESHOLD")
-fi
-
-if [ -n "$COMPACT_PRESERVE_MESSAGES" ]; then
-    ARGS+=(--compact-preserve-messages "$COMPACT_PRESERVE_MESSAGES")
-fi
-
-# 恢复会话
-if [ -n "$RESUME_SESSION_ID" ]; then
-    ARGS+=(--resume-session-id "$RESUME_SESSION_ID")
 fi
 
 # 初始提示词（从命令行参数）
@@ -119,18 +73,14 @@ fi
 
 # 打印配置信息
 echo "================================"
-echo "Code Agent 启动配置"
+echo "Code Agent"
 echo "================================"
 echo "模型: $MODEL"
-echo "API 地址: $BASE_URL"
+echo "API: $BASE_URL"
 echo "温度: $TEMPERATURE"
-echo "最大输出 tokens: $MAX_TOKENS"
+echo "max_tokens: $MAX_TOKENS"
 echo "最大轮次: $MAX_TURNS"
-echo "工作目录: $CWD"
-echo "文件写入: ${ALLOW_WRITE:-false}"
-echo "Shell 命令: ${ALLOW_SHELL:-false}"
 echo "================================"
 echo
 
-# 启动 Agent
 python -m src.main "${ARGS[@]}"
