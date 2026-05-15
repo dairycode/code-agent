@@ -79,7 +79,13 @@ echo "模型: $MODEL"
 echo "API: $BASE_URL"
 echo "温度: $TEMPERATURE"
 echo "max_tokens: $MAX_TOKENS"
+echo "超时: ${TIMEOUT_SECONDS}s"
 echo "最大轮次: $MAX_TURNS"
+echo "工作目录: $CWD"
+echo "文件写入: $ALLOW_WRITE"
+echo "Shell 命令: $ALLOW_SHELL"
+echo "危险操作: $UNSAFE"
+echo "流式输出: $STREAM"
 echo "================================"
 echo
 
