@@ -41,7 +41,7 @@ vim start.sh
 或直接使用 Python：
 
 ```bash
-python -m src.main \
+python3 -m src.main \
   --model "claude-sonnet-4-20250514" \
   --base-url "https://api.anthropic.com" \
   --api-key "sk-ant-..." \
@@ -96,7 +96,7 @@ main.py
 ### 1. 启动阶段
 
 ```
-start.sh → python -m src.main → _build_agent() → _run_agent_chat_loop()
+start.sh → python3 -m src.main → _build_agent() → _run_agent_chat_loop()
 ```
 
 `main.py` 做三件事：
@@ -889,11 +889,11 @@ agent.resume(prompt, stored_session)
 
 ```bash
 # 首次对话（自动生成 session_id）
-python -m src.main --model "claude-sonnet-4-20250514"
+python3 -m src.main --model "claude-sonnet-4-20250514"
 # 输出: session_id=a1b2c3d4-e5f6-7890-abcd-ef1234567890
 
 # 恢复对话（携带完整历史上下文）
-python -m src.main --resume-session-id a1b2c3d4-e5f6-7890-abcd-ef1234567890
+python3 -m src.main --resume-session-id a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
 恢复后的对话会自动加载之前的系统提示、消息历史、预算状态和插件状态，模型可以无缝继续之前的工作。
